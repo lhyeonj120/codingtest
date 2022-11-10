@@ -15,10 +15,13 @@ int main(int argc, char** argv)
         string res = "ON";
         cin >> N >> M;
         
-       	int a = (1 << N) - 1;
-        if((int)(M & a) != a)
+       	int a = 0;
+        for(int i = 0; i < N; i++)
+            a |= (1 << i);
+        
+        if((a & M) != (1 << N) - 1)
             res = "OFF";
-
+        
         cout << '#' << test_case << ' ' << res << '\n';
 	}
 	return 0;
