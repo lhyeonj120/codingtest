@@ -1,56 +1,46 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <cmath>
 #include <cstdlib>
 using namespace std;
 
+int N;
 int S[21][21];
+bool check[21];
+int minRes = 200;
+
+void DFS(int cnt, int num){
+    if(cnt == N / 2){
+        int start = 0, link = 0;
+        
+        for(int i = 1; i <= N; i++)
+            for(int j = 1; j <= N; j++){
+                if(check[i] && check[j])
+                    start += S[i][j];
+                if(!check[i] && !check[j])
+                    link += S[i][j];
+            }
+        minRes = min(minRes, abs(start - link));
+        return;
+    }
+    for(int i = num; i < N; i++){
+        check[i] = true;
+        DFS(cnt + 1, i + 1);
+        check[i] = false;
+    }
+}
 
 int main(){
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	
-	int N;
-	cin >> N;
-	for(int i = 0; i < N; i++)
-		for(int j = 0; j < N; j++)
-			cin >> S[i][j];
-	
-	vector<int> person, start, link;
-	for(int i = 0; i < N; i++)
-		person.push_back(i);
-	
-	int minRes = 200;
-	vector<int> v;
-    for(int i = 0; i < N / 2; i++)
-		v.push_back(0);
-    for(int i = 0; i < N / 2; i++)
-		v.push_back(1);
-    do{
-        vector<int> start, link;
-        for(int i = 0; i < v.size(); i++){
-            if(v[i] == 0)
-				start.push_back(i);
-            else
-				link.push_back(i);
-        }
-		
-		int startSum = 0;
-		int linkSum = 0;
-		for(int i = 0; i < N / 2; i++){
-			for(int j = i + 1; j < N / 2; j++){
-				if(i == j)
-					continue;
-				startSum += S[start[i]][start[j]] + S[start[j]][start[i]];
-				linkSum += S[link[i]][link[j]] + S[link[j]][link[i]];
-			}
-		}
-		
-		minRes = min(minRes, abs(startSum - linkSum));
-		
-	} while(next_permutation(v.begin(), v.end()));
-	
-	cout << minRes;
-	
-	return 0;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    
+    cin >> N;
+    for(int i = 1; i <= N; i++)
+        for(int j = 1; j <= N; j++)
+            cin >> S[i][j];
+    
+    DFS(0, 1);
+    
+    cout << minRes;
+    
+    return 0;
 }
